@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
   Platform,
   useColorScheme,
+  Alert,
+  ActionSheetIOS,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { colors, getColors } from '@/styles/commonStyles';
-import { getFuelEntries, getSettings } from '@/utils/storage';
+import { getFuelEntries, getSettings, deleteFuelEntry } from '@/utils/storage';
 import { FuelEntry, AppSettings } from '@/types/fuel';
 import { getTranslation } from '@/utils/translations';
 import { formatCurrency, formatAmount, formatDate } from '@/utils/statistics';
@@ -77,6 +79,65 @@ export default function HomeScreen() {
   const getCurrentMonthYear = () => {
     const now = new Date();
     return now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
+  const handleEntryPress = (entry: FuelEntry) => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: [t('cancel'), t('edit'), t('delete')],
+          destructiveButtonIndex: 2,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            handleEditEntry(entry);
+          } else if (buttonIndex === 2) {
+            handleDeleteEntry(entry);
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        t('selectAction'),
+        '',
+        [
+          { text: t('cancel'), style: 'cancel' },
+          { text: t('edit'), onPress: () => handleEditEntry(entry) },
+          { text: t('delete'), onPress: () => handleDeleteEntry(entry), style: 'destructive' },
+        ]
+      );
+    }
+  };
+
+  const handleEditEntry = (entry: FuelEntry) => {
+    router.push({
+      pathname: '/(tabs)/fuelEntry',
+      params: { entryId: entry.id },
+    });
+  };
+
+  const handleDeleteEntry = (entry: FuelEntry) => {
+    Alert.alert(
+      t('confirmDelete'),
+      t('confirmDeleteMessage'),
+      [
+        { text: t('cancel'), style: 'cancel' },
+        {
+          text: t('delete'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteFuelEntry(entry.id);
+              await loadData();
+              Alert.alert(t('success'), t('entryDeleted'));
+            } catch (error) {
+              Alert.alert(t('error'), String(error));
+            }
+          },
+        },
+      ]
+    );
   };
 
   const recentEntries = entries
@@ -175,9 +236,11 @@ export default function HomeScreen() {
               </View>
             ) : (
               recentEntries.map((entry) => (
-                <View
+                <TouchableOpacity
                   key={entry.id}
                   style={[styles.entryCard, { backgroundColor: themeColors.card }]}
+                  onPress={() => handleEntryPress(entry)}
+                  activeOpacity={0.7}
                 >
                   <View style={[styles.entryIcon, { backgroundColor: themeColors.primary + '20' }]}>
                     <IconSymbol name="fuelpump.fill" size={24} color={themeColors.primary} />
@@ -208,8 +271,9 @@ export default function HomeScreen() {
                     <Text style={[styles.entryCost, { color: themeColors.primary }]}>
                       {formatCurrency(entry.cost, settings.currency).replace(/\.\d{2}$/, '')}
                     </Text>
+                    <IconSymbol name="chevron.right" size={16} color={themeColors.textSecondary} />
                   </View>
-                </View>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
@@ -361,6 +425,7 @@ const styles = StyleSheet.create({
   },
   entryRight: {
     alignItems: 'flex-end',
+    gap: 4,
   },
   entryCost: {
     fontSize: 20,

@@ -23,6 +23,7 @@ import {
 } from '@/utils/statistics';
 import { IconSymbol } from '@/components/IconSymbol';
 import { useFocusEffect } from '@react-navigation/native';
+import BarChart from '@/components/BarChart';
 
 export default function StatisticsScreen() {
   const colorScheme = useColorScheme();
@@ -54,6 +55,26 @@ export default function StatisticsScreen() {
   const monthlyStats = calculateMonthlyStats(entries);
   const yearlyStats = calculateYearlyStats(entries);
 
+  const getChartData = () => {
+    if (viewMode === 'monthly') {
+      return monthlyStats.slice(0, 6).reverse().map((stat) => {
+        const [year, month] = stat.month.split('-');
+        const monthName = new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short' });
+        return {
+          label: monthName,
+          value: stat.totalCost,
+          color: colors.primary,
+        };
+      });
+    } else {
+      return yearlyStats.slice(0, 5).reverse().map((stat) => ({
+        label: stat.year,
+        value: stat.totalCost,
+        color: colors.secondary,
+      }));
+    }
+  };
+
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <IconSymbol name="chart.bar.xaxis" size={64} color={colors.textSecondary} />
@@ -61,6 +82,29 @@ export default function StatisticsScreen() {
       <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('addFirstEntry')}</Text>
     </View>
   );
+
+  const renderChart = () => {
+    const chartData = getChartData();
+    if (chartData.length === 0) return null;
+
+    return (
+      <View style={[styles.chartCard, { backgroundColor: colors.card }]}>
+        <View style={styles.chartHeader}>
+          <IconSymbol name="chart.bar.fill" size={24} color={colors.primary} />
+          <Text style={[styles.chartTitle, { color: colors.text }]}>
+            {viewMode === 'monthly' ? t('monthlyTrend') : t('yearlyTrend')}
+          </Text>
+        </View>
+        <BarChart
+          data={chartData}
+          height={220}
+          showValues={true}
+          currency={settings.currency}
+          textColor={colors.textSecondary}
+        />
+      </View>
+    );
+  };
 
   const renderMonthlyStats = () => (
     <View>
@@ -235,11 +279,14 @@ export default function StatisticsScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {entries.length === 0
-            ? renderEmptyState()
-            : viewMode === 'monthly'
-            ? renderMonthlyStats()
-            : renderYearlyStats()}
+          {entries.length === 0 ? (
+            renderEmptyState()
+          ) : (
+            <>
+              {renderChart()}
+              {viewMode === 'monthly' ? renderMonthlyStats() : renderYearlyStats()}
+            </>
+          )}
         </ScrollView>
       </View>
     </>
@@ -290,6 +337,23 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  chartCard: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
+    elevation: 3,
+  },
+  chartHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   statCard: {
     borderRadius: 16,

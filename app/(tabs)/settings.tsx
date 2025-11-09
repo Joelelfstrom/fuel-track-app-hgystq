@@ -14,7 +14,7 @@ import { Stack } from 'expo-router';
 import { IconSymbol } from '@/components/IconSymbol';
 import { getColors } from '@/styles/commonStyles';
 import { AppSettings } from '@/types/fuel';
-import { getSettings, saveSettings } from '@/utils/storage';
+import { getSettings, saveSettings, clearAllData } from '@/utils/storage';
 import { getTranslation } from '@/utils/translations';
 
 const LANGUAGES = [
@@ -77,6 +77,41 @@ export default function SettingsScreen() {
     const newSettings = { ...settings, unit };
     setSettings(newSettings);
     await saveSettings(newSettings);
+  };
+
+  const handleEraseAllData = () => {
+    Alert.alert(
+      t('eraseAllData'),
+      t('eraseAllDataWarning'),
+      [
+        { text: t('cancel'), style: 'cancel' },
+        {
+          text: t('eraseAll'),
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              t('confirmErase'),
+              t('confirmEraseMessage'),
+              [
+                { text: t('cancel'), style: 'cancel' },
+                {
+                  text: t('eraseAll'),
+                  style: 'destructive',
+                  onPress: async () => {
+                    try {
+                      await clearAllData();
+                      Alert.alert(t('success'), t('allDataErased'));
+                    } catch (error) {
+                      Alert.alert(t('error'), String(error));
+                    }
+                  },
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -159,6 +194,18 @@ export default function SettingsScreen() {
               ))}
             </View>
           </View>
+
+          {/* Data Management Section */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('dataManagement')}</Text>
+            <TouchableOpacity
+              style={[styles.dangerButton, { backgroundColor: colors.card, borderColor: '#FF3B30' }]}
+              onPress={handleEraseAllData}
+            >
+              <IconSymbol name="trash.fill" size={24} color="#FF3B30" />
+              <Text style={[styles.dangerButtonText, { color: '#FF3B30' }]}>{t('eraseAllData')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </>
@@ -208,5 +255,20 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  dangerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 2,
+    gap: 12,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
+    elevation: 3,
+  },
+  dangerButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

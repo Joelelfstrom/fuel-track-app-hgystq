@@ -11,10 +11,10 @@ import {
   Platform,
   useColorScheme,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getColors } from '@/styles/commonStyles';
-import { saveFuelEntry, getSettings } from '@/utils/storage';
+import { saveFuelEntry, getSettings, getFuelEntries, updateFuelEntry } from '@/utils/storage';
 import { FuelEntry, AppSettings } from '@/types/fuel';
 import { getTranslation } from '@/utils/translations';
 import { IconSymbol } from '@/components/IconSymbol';
@@ -22,6 +22,9 @@ import { IconSymbol } from '@/components/IconSymbol';
 export default function FuelEntryScreen() {
   const colorScheme = useColorScheme();
   const colors = getColors(colorScheme === 'dark');
+  const params = useLocalSearchParams();
+  const router = useRouter();
+  const entryId = params.entryId as string | undefined;
   
   const [settings, setSettings] = useState<AppSettings>({
     language: 'en',
@@ -34,14 +37,31 @@ export default function FuelEntryScreen() {
   const [amount, setAmount] = useState('');
   const [odometer, setOdometer] = useState('');
   const [notes, setNotes] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     loadSettings();
-  }, []);
+    if (entryId) {
+      loadEntry(entryId);
+    }
+  }, [entryId]);
 
   const loadSettings = async () => {
     const loadedSettings = await getSettings();
     setSettings(loadedSettings);
+  };
+
+  const loadEntry = async (id: string) => {
+    const entries = await getFuelEntries();
+    const entry = entries.find(e => e.id === id);
+    if (entry) {
+      setIsEditing(true);
+      setDate(new Date(entry.date));
+      setCost(entry.cost.toString());
+      setAmount(entry.amount.toString());
+      setOdometer(entry.odometer?.toString() || '');
+      setNotes(entry.notes || '');
+    }
   };
 
   const t = (key: string) => getTranslation(settings.language, key);
@@ -61,7 +81,7 @@ export default function FuelEntryScreen() {
     }
 
     const entry: FuelEntry = {
-      id: Date.now().toString(),
+      id: isEditing ? entryId! : Date.now().toString(),
       date: date.toISOString(),
       cost: costNum,
       amount: amountNum,
@@ -71,15 +91,22 @@ export default function FuelEntryScreen() {
     };
 
     try {
-      await saveFuelEntry(entry);
-      Alert.alert(t('entrySaved'));
-      
-      // Reset form
-      setCost('');
-      setAmount('');
-      setOdometer('');
-      setNotes('');
-      setDate(new Date());
+      if (isEditing) {
+        await updateFuelEntry(entry);
+        Alert.alert(t('success'), t('entryUpdated'), [
+          { text: t('ok'), onPress: () => router.back() }
+        ]);
+      } else {
+        await saveFuelEntry(entry);
+        Alert.alert(t('success'), t('entrySaved'));
+        
+        // Reset form
+        setCost('');
+        setAmount('');
+        setOdometer('');
+        setNotes('');
+        setDate(new Date());
+      }
     } catch (error) {
       Alert.alert(t('error'), String(error));
     }
@@ -96,7 +123,7 @@ export default function FuelEntryScreen() {
     <>
       <Stack.Screen
         options={{
-          title: t('addFuelEntry'),
+          title: isEditing ? t('editEntry') : t('addFuelEntry'),
           headerShown: Platform.OS === 'ios',
         }}
       />
@@ -104,7 +131,9 @@ export default function FuelEntryScreen() {
         <View style={styles.content}>
           <View style={styles.header}>
             <IconSymbol name="fuelpump.fill" size={48} color={colors.primary} />
-            <Text style={[styles.headerTitle, { color: colors.text }]}>{t('addFuelEntry')}</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>
+              {isEditing ? t('editEntry') : t('addFuelEntry')}
+            </Text>
           </View>
 
           <View style={[styles.card, { backgroundColor: colors.card }]}>
@@ -197,8 +226,17 @@ export default function FuelEntryScreen() {
 
           <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSave}>
             <IconSymbol name="checkmark.circle.fill" size={24} color="#FFFFFF" />
-            <Text style={styles.saveButtonText}>{t('save')}</Text>
+            <Text style={styles.saveButtonText}>{isEditing ? t('update') : t('save')}</Text>
           </TouchableOpacity>
+
+          {isEditing && (
+            <TouchableOpacity 
+              style={[styles.cancelButton, { backgroundColor: colors.card, borderColor: colors.border }]} 
+              onPress={() => router.back()}
+            >
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>{t('cancel')}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </>
@@ -284,5 +322,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,
+  },
+  cancelButton: {
+    borderRadius: 16,
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 12,
+    borderWidth: 2,
+  },
+  cancelButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

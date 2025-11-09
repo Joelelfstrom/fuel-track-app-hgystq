@@ -87,3 +87,14 @@ export const getSettings = async (): Promise<AppSettings> => {
     return defaultSettings;
   }
 };
+
+// Clear all data
+export const clearAllData = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(FUEL_ENTRIES_KEY);
+    console.log('All fuel entries cleared');
+  } catch (error) {
+    console.error('Error clearing all data:', error);
+    throw error;
+  }
+};
