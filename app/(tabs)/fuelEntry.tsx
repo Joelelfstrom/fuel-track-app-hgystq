@@ -130,11 +130,59 @@ export default function FuelEntryScreen() {
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <IconSymbol name="fuelpump.fill" size={48} color={colors.primary} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.primary + '20' }]}>
+              <IconSymbol name="fuelpump.fill" size={56} color={colors.primary} />
+            </View>
             <Text style={[styles.headerTitle, { color: colors.text }]}>
               {isEditing ? t('editEntry') : t('addFuelEntry')}
             </Text>
+            <Text style={[styles.headerSubtitle, { color: colors.textSecondary }]}>
+              Track your fuel purchase details for better insights
+            </Text>
           </View>
+
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Purchase Details</Text>
+
+          <View style={styles.rowContainer}>
+            <View style={[styles.halfCard, { backgroundColor: colors.card }]}>
+              <Text style={[styles.label, { color: colors.text }]}>
+                {t('cost')} ({settings.currency}) *
+              </Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
+                value={cost}
+                onChangeText={setCost}
+                keyboardType="decimal-pad"
+                placeholder="0.00"
+                placeholderTextColor={colors.textSecondary}
+              />
+            </View>
+
+            <View style={[styles.halfCard, { backgroundColor: colors.card }]}>
+              <Text style={[styles.label, { color: colors.text }]}>
+                {settings.unit === 'liters' ? 'Liters' : 'Gallons'} *
+              </Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
+                value={amount}
+                onChangeText={setAmount}
+                keyboardType="decimal-pad"
+                placeholder="0.0"
+                placeholderTextColor={colors.textSecondary}
+              />
+            </View>
+          </View>
+
+          {cost && amount && parseFloat(cost) > 0 && parseFloat(amount) > 0 && (
+            <View style={[styles.card, styles.priceCard, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border }]}>
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, { color: colors.textSecondary }]}>Price per Liter</Text>
+                <Text style={[styles.priceValue, { color: colors.text }]}>
+                  $ Calculated automatically
+                </Text>
+              </View>
+            </View>
+          )}
 
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <Text style={[styles.label, { color: colors.text }]}>{t('date')}</Text>
@@ -142,14 +190,14 @@ export default function FuelEntryScreen() {
               style={[styles.dateButton, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border }]}
               onPress={() => setShowDatePicker(true)}
             >
+              <IconSymbol name="calendar" size={20} color={colors.text} />
               <Text style={[styles.dateText, { color: colors.text }]}>
                 {date.toLocaleDateString('en-US', {
                   year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
                 })}
               </Text>
-              <IconSymbol name="calendar" size={20} color={colors.primary} />
             </TouchableOpacity>
 
             {showDatePicker && (
@@ -164,43 +212,7 @@ export default function FuelEntryScreen() {
           </View>
 
           <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.label, { color: colors.text }]}>{t('cost')} ({settings.currency})</Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
-              value={cost}
-              onChangeText={setCost}
-              keyboardType="decimal-pad"
-              placeholder="0.00"
-              placeholderTextColor={colors.textSecondary}
-            />
-          </View>
-
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.label, { color: colors.text }]}>
-              {t('amount')} ({settings.unit === 'liters' ? 'L' : 'gal'})
-            </Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="decimal-pad"
-              placeholder="0.00"
-              placeholderTextColor={colors.textSecondary}
-            />
-          </View>
-
-          {cost && amount && parseFloat(cost) > 0 && parseFloat(amount) > 0 && (
-            <View style={[styles.card, styles.priceCard, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]}>
-              <Text style={[styles.priceLabel, { color: colors.text }]}>{t('averagePrice')}</Text>
-              <Text style={[styles.priceValue, { color: colors.primary }]}>
-                {(parseFloat(cost) / parseFloat(amount)).toFixed(3)} {settings.currency}/
-                {settings.unit === 'liters' ? 'L' : 'gal'}
-              </Text>
-            </View>
-          )}
-
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.label, { color: colors.text }]}>{t('odometer')}</Text>
+            <Text style={[styles.label, { color: colors.text }]}>{t('odometer')} (Optional)</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={odometer}
@@ -212,12 +224,12 @@ export default function FuelEntryScreen() {
           </View>
 
           <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.label, { color: colors.text }]}>{t('notes')}</Text>
+            <Text style={[styles.label, { color: colors.text }]}>{t('notes')} (Optional)</Text>
             <TextInput
               style={[styles.input, styles.notesInput, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={notes}
               onChangeText={setNotes}
-              placeholder={t('notes')}
+              placeholder="Add any additional notes..."
               placeholderTextColor={colors.textSecondary}
               multiline
               numberOfLines={3}
@@ -248,19 +260,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 16,
+    padding: 20,
+    paddingTop: Platform.OS === 'ios' ? 60 : 20,
     paddingBottom: 100,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 24,
-    marginTop: 16,
+    marginBottom: 32,
+    marginTop: 8,
+  },
+  iconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 12,
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  halfCard: {
+    flex: 1,
+    borderRadius: 16,
+    padding: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
+    elevation: 3,
   },
   card: {
     borderRadius: 16,
@@ -270,13 +313,13 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   input: {
     borderRadius: 12,
-    padding: 12,
+    padding: 14,
     fontSize: 16,
     borderWidth: 1,
   },
@@ -286,34 +329,38 @@ const styles = StyleSheet.create({
   },
   dateButton: {
     borderRadius: 12,
-    padding: 12,
+    padding: 14,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
+    gap: 12,
   },
   dateText: {
     fontSize: 16,
   },
   priceCard: {
-    borderWidth: 2,
+    borderWidth: 1,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   priceLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
+    fontWeight: '500',
   },
   priceValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '500',
   },
   saveButton: {
     borderRadius: 16,
-    padding: 16,
+    padding: 18,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 16,
     boxShadow: '0px 4px 12px rgba(0, 217, 255, 0.3)',
     elevation: 5,
   },
@@ -325,7 +372,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     borderRadius: 16,
-    padding: 16,
+    padding: 18,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 12,

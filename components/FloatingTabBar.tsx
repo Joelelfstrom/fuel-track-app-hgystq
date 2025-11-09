@@ -81,7 +81,7 @@ export default function FloatingTabBar({
               >
                 <IconSymbol
                   name={tab.icon as any}
-                  size={24}
+                  size={28}
                   color={isActive ? colors.primary : colors.textSecondary}
                 />
                 <Text
