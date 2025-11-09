@@ -13,7 +13,7 @@ export default function TabLayout() {
       name: '(home)',
       route: '/(tabs)/(home)',
       icon: 'fuelpump.fill',
-      label: 'Home',
+      label: '⛽',
     },
     {
       name: 'fuelEntry',
@@ -35,7 +35,7 @@ export default function TabLayout() {
       <NativeTabs>
         <NativeTabs.Trigger name="(home)">
           <Icon sf="fuelpump.fill" drawable="ic_fuel" />
-          <Label>Home</Label>
+          <Label>⛽</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="fuelEntry">
           <Icon sf="plus.circle.fill" drawable="ic_add" />
