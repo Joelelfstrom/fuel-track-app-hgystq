@@ -10,6 +10,7 @@ import {
   Alert,
   Platform,
   useColorScheme,
+  Image,
 } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -130,8 +131,12 @@ export default function FuelEntryScreen() {
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <View style={[styles.iconCircle, { backgroundColor: colors.primary + '20' }]}>
-              <IconSymbol name="fuelpump.fill" size={56} color={colors.primary} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.primary + '20', borderColor: colors.primary, borderWidth: 2 }]}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1545262810-77515befe149?w=200&h=200&fit=crop' }}
+                style={styles.fuelImage}
+                resizeMode="cover"
+              />
             </View>
             <Text style={[styles.headerTitle, { color: colors.text }]}>
               {isEditing ? t('editEntry') : t('addFuelEntry')}
@@ -276,6 +281,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
+    overflow: 'hidden',
+  },
+  fuelImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
   },
   headerTitle: {
     fontSize: 26,
