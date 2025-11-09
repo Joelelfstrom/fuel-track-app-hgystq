@@ -27,12 +27,6 @@ export default function TabLayout() {
       icon: 'chart.bar.fill',
       label: 'Statistics',
     },
-    {
-      name: 'settings',
-      route: '/(tabs)/settings',
-      icon: 'gearshape.fill',
-      label: 'Settings',
-    },
   ];
 
   // Use NativeTabs for iOS, custom FloatingTabBar for Android and Web
@@ -51,10 +45,6 @@ export default function TabLayout() {
           <Icon sf="chart.bar.fill" drawable="ic_stats" />
           <Label>Statistics</Label>
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="settings">
-          <Icon sf="gearshape.fill" drawable="ic_settings" />
-          <Label>Settings</Label>
-        </NativeTabs.Trigger>
       </NativeTabs>
     );
   }
@@ -71,7 +61,6 @@ export default function TabLayout() {
         <Stack.Screen name="(home)" />
         <Stack.Screen name="fuelEntry" />
         <Stack.Screen name="statistics" />
-        <Stack.Screen name="settings" />
       </Stack>
       <FloatingTabBar tabs={tabs} />
     </>
