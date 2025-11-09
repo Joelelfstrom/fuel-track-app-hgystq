@@ -9,16 +9,20 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { colors, commonStyles } from '@/styles/commonStyles';
+import { getColors } from '@/styles/commonStyles';
 import { saveFuelEntry, getSettings } from '@/utils/storage';
 import { FuelEntry, AppSettings } from '@/types/fuel';
 import { getTranslation } from '@/utils/translations';
 import { IconSymbol } from '@/components/IconSymbol';
 
 export default function FuelEntryScreen() {
+  const colorScheme = useColorScheme();
+  const colors = getColors(colorScheme === 'dark');
+  
   const [settings, setSettings] = useState<AppSettings>({
     language: 'en',
     currency: 'USD',
@@ -100,16 +104,16 @@ export default function FuelEntryScreen() {
         <View style={styles.content}>
           <View style={styles.header}>
             <IconSymbol name="fuelpump.fill" size={48} color={colors.primary} />
-            <Text style={styles.headerTitle}>{t('addFuelEntry')}</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>{t('addFuelEntry')}</Text>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.label}>{t('date')}</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Text style={[styles.label, { color: colors.text }]}>{t('date')}</Text>
             <TouchableOpacity
-              style={styles.dateButton}
+              style={[styles.dateButton, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border }]}
               onPress={() => setShowDatePicker(true)}
             >
-              <Text style={styles.dateText}>
+              <Text style={[styles.dateText, { color: colors.text }]}>
                 {date.toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -130,10 +134,10 @@ export default function FuelEntryScreen() {
             )}
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.label}>{t('cost')} ({settings.currency})</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Text style={[styles.label, { color: colors.text }]}>{t('cost')} ({settings.currency})</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={cost}
               onChangeText={setCost}
               keyboardType="decimal-pad"
@@ -142,12 +146,12 @@ export default function FuelEntryScreen() {
             />
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.label}>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Text style={[styles.label, { color: colors.text }]}>
               {t('amount')} ({settings.unit === 'liters' ? 'L' : 'gal'})
             </Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={amount}
               onChangeText={setAmount}
               keyboardType="decimal-pad"
@@ -157,19 +161,19 @@ export default function FuelEntryScreen() {
           </View>
 
           {cost && amount && parseFloat(cost) > 0 && parseFloat(amount) > 0 && (
-            <View style={[styles.card, styles.priceCard]}>
-              <Text style={styles.priceLabel}>{t('averagePrice')}</Text>
-              <Text style={styles.priceValue}>
+            <View style={[styles.card, styles.priceCard, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]}>
+              <Text style={[styles.priceLabel, { color: colors.text }]}>{t('averagePrice')}</Text>
+              <Text style={[styles.priceValue, { color: colors.primary }]}>
                 {(parseFloat(cost) / parseFloat(amount)).toFixed(3)} {settings.currency}/
                 {settings.unit === 'liters' ? 'L' : 'gal'}
               </Text>
             </View>
           )}
 
-          <View style={styles.card}>
-            <Text style={styles.label}>{t('odometer')}</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Text style={[styles.label, { color: colors.text }]}>{t('odometer')}</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={odometer}
               onChangeText={setOdometer}
               keyboardType="decimal-pad"
@@ -178,10 +182,10 @@ export default function FuelEntryScreen() {
             />
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.label}>{t('notes')}</Text>
+          <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Text style={[styles.label, { color: colors.text }]}>{t('notes')}</Text>
             <TextInput
-              style={[styles.input, styles.notesInput]}
+              style={[styles.input, styles.notesInput, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border, color: colors.text }]}
               value={notes}
               onChangeText={setNotes}
               placeholder={t('notes')}
@@ -191,8 +195,8 @@ export default function FuelEntryScreen() {
             />
           </View>
 
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <IconSymbol name="checkmark.circle.fill" size={24} color={colors.card} />
+          <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSave}>
+            <IconSymbol name="checkmark.circle.fill" size={24} color="#FFFFFF" />
             <Text style={styles.saveButtonText}>{t('save')}</Text>
           </TouchableOpacity>
         </View>
@@ -207,6 +211,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+    paddingTop: Platform.OS === 'ios' ? 60 : 16,
     paddingBottom: 100,
   },
   header: {
@@ -217,79 +222,65 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.text,
     marginTop: 12,
   },
   card: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
     elevation: 3,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
     fontSize: 16,
-    color: colors.text,
     borderWidth: 1,
-    borderColor: colors.border,
   },
   notesInput: {
     minHeight: 80,
     textAlignVertical: 'top',
   },
   dateButton: {
-    backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.border,
   },
   dateText: {
     fontSize: 16,
-    color: colors.text,
   },
   priceCard: {
-    backgroundColor: colors.highlight,
     borderWidth: 2,
-    borderColor: colors.primary,
   },
   priceLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
     marginBottom: 4,
   },
   priceValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.primary,
   },
   saveButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    boxShadow: '0px 4px 12px rgba(41, 98, 255, 0.3)',
+    boxShadow: '0px 4px 12px rgba(0, 217, 255, 0.3)',
     elevation: 5,
   },
   saveButtonText: {
-    color: colors.card,
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,

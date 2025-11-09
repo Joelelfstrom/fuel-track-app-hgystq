@@ -7,9 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { colors } from '@/styles/commonStyles';
+import { getColors } from '@/styles/commonStyles';
 import { getFuelEntries, getSettings } from '@/utils/storage';
 import { FuelEntry, AppSettings } from '@/types/fuel';
 import { getTranslation } from '@/utils/translations';
@@ -24,6 +25,9 @@ import { IconSymbol } from '@/components/IconSymbol';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function StatisticsScreen() {
+  const colorScheme = useColorScheme();
+  const colors = getColors(colorScheme === 'dark');
+  
   const [settings, setSettings] = useState<AppSettings>({
     language: 'en',
     currency: 'USD',
@@ -53,19 +57,19 @@ export default function StatisticsScreen() {
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <IconSymbol name="chart.bar.xaxis" size={64} color={colors.textSecondary} />
-      <Text style={styles.emptyTitle}>{t('noData')}</Text>
-      <Text style={styles.emptyText}>{t('addFirstEntry')}</Text>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('noData')}</Text>
+      <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{t('addFirstEntry')}</Text>
     </View>
   );
 
   const renderMonthlyStats = () => (
     <View>
       {monthlyStats.map((stat, index) => (
-        <View key={stat.month} style={styles.statCard}>
+        <View key={stat.month} style={[styles.statCard, { backgroundColor: colors.card }]}>
           <View style={styles.statHeader}>
-            <Text style={styles.statMonth}>{formatMonthYear(stat.month)}</Text>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>
+            <Text style={[styles.statMonth, { color: colors.text }]}>{formatMonthYear(stat.month)}</Text>
+            <View style={[styles.badge, { backgroundColor: colors.primary + '20' }]}>
+              <Text style={[styles.badgeText, { color: colors.primary }]}>
                 {stat.entryCount} {t('entries')}
               </Text>
             </View>
@@ -73,10 +77,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="dollarsign.circle.fill" size={24} color={colors.primary} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <IconSymbol name="dollarsign.circle.fill" size={24} color={colors.primary} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('totalCost')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('totalCost')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatCurrency(stat.totalCost, settings.currency)}
                 </Text>
               </View>
@@ -85,10 +91,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="fuelpump.fill" size={24} color={colors.secondary} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <IconSymbol name="fuelpump.fill" size={24} color={colors.secondary} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('totalAmount')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('totalAmount')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatAmount(stat.totalAmount, settings.unit)}
                 </Text>
               </View>
@@ -97,10 +105,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="chart.line.uptrend.xyaxis" size={24} color={colors.accent} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <IconSymbol name="chart.line.uptrend.xyaxis" size={24} color={colors.accent} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('averagePrice')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('averagePrice')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatCurrency(stat.averagePricePerUnit, settings.currency)}/
                   {settings.unit === 'liters' ? 'L' : 'gal'}
                 </Text>
@@ -115,11 +125,11 @@ export default function StatisticsScreen() {
   const renderYearlyStats = () => (
     <View>
       {yearlyStats.map((stat) => (
-        <View key={stat.year} style={styles.statCard}>
+        <View key={stat.year} style={[styles.statCard, { backgroundColor: colors.card }]}>
           <View style={styles.statHeader}>
-            <Text style={styles.statYear}>{stat.year}</Text>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>
+            <Text style={[styles.statYear, { color: colors.text }]}>{stat.year}</Text>
+            <View style={[styles.badge, { backgroundColor: colors.primary + '20' }]}>
+              <Text style={[styles.badgeText, { color: colors.primary }]}>
                 {stat.entryCount} {t('entries')}
               </Text>
             </View>
@@ -127,10 +137,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="dollarsign.circle.fill" size={24} color={colors.primary} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <IconSymbol name="dollarsign.circle.fill" size={24} color={colors.primary} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('totalCost')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('totalCost')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatCurrency(stat.totalCost, settings.currency)}
                 </Text>
               </View>
@@ -139,10 +151,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="fuelpump.fill" size={24} color={colors.secondary} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <IconSymbol name="fuelpump.fill" size={24} color={colors.secondary} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('totalAmount')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('totalAmount')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatAmount(stat.totalAmount, settings.unit)}
                 </Text>
               </View>
@@ -151,10 +165,12 @@ export default function StatisticsScreen() {
 
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol name="chart.line.uptrend.xyaxis" size={24} color={colors.accent} />
+              <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <IconSymbol name="chart.line.uptrend.xyaxis" size={24} color={colors.accent} />
+              </View>
               <View style={styles.statContent}>
-                <Text style={styles.statLabel}>{t('averagePrice')}</Text>
-                <Text style={styles.statValue}>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('averagePrice')}</Text>
+                <Text style={[styles.statValue, { color: colors.text }]}>
                   {formatCurrency(stat.averagePricePerUnit, settings.currency)}/
                   {settings.unit === 'liters' ? 'L' : 'gal'}
                 </Text>
@@ -179,14 +195,16 @@ export default function StatisticsScreen() {
           <TouchableOpacity
             style={[
               styles.toggleButton,
-              viewMode === 'monthly' && styles.toggleButtonActive,
+              { backgroundColor: colors.card, borderColor: colors.border },
+              viewMode === 'monthly' && { backgroundColor: colors.primary, borderColor: colors.primary },
             ]}
             onPress={() => setViewMode('monthly')}
           >
             <Text
               style={[
                 styles.toggleText,
-                viewMode === 'monthly' && styles.toggleTextActive,
+                { color: colors.text },
+                viewMode === 'monthly' && { color: '#FFFFFF' },
               ]}
             >
               {t('monthlyStats')}
@@ -195,14 +213,16 @@ export default function StatisticsScreen() {
           <TouchableOpacity
             style={[
               styles.toggleButton,
-              viewMode === 'yearly' && styles.toggleButtonActive,
+              { backgroundColor: colors.card, borderColor: colors.border },
+              viewMode === 'yearly' && { backgroundColor: colors.primary, borderColor: colors.primary },
             ]}
             onPress={() => setViewMode('yearly')}
           >
             <Text
               style={[
                 styles.toggleText,
-                viewMode === 'yearly' && styles.toggleTextActive,
+                { color: colors.text },
+                viewMode === 'yearly' && { color: '#FFFFFF' },
               ]}
             >
               {t('yearlyStats')}
@@ -234,28 +254,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 16,
     gap: 12,
+    paddingTop: Platform.OS === 'ios' ? 60 : 16,
   },
   toggleButton: {
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 10,
-    backgroundColor: colors.card,
+    borderRadius: 12,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: colors.border,
-  },
-  toggleButtonActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
   toggleText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
-  },
-  toggleTextActive: {
-    color: colors.card,
   },
   scrollView: {
     flex: 1,
@@ -273,21 +284,18 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
     marginTop: 16,
     marginBottom: 8,
   },
   emptyText: {
     fontSize: 16,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   statCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
     elevation: 3,
   },
   statHeader: {
@@ -295,30 +303,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   statMonth: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
   },
   statYear: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
   },
   badge: {
-    backgroundColor: colors.highlight,
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 6,
     borderRadius: 12,
   },
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.primary,
   },
   statRow: {
     marginBottom: 12,
@@ -327,18 +328,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
   statContent: {
-    marginLeft: 12,
     flex: 1,
   },
   statLabel: {
     fontSize: 14,
-    color: colors.textSecondary,
     marginBottom: 2,
   },
   statValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
   },
 });

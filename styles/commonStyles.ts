@@ -1,18 +1,40 @@
 
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, useColorScheme } from 'react-native';
 
-export const colors = {
-  background: '#f9f9f9',
-  text: '#212121',
-  textSecondary: '#757575',
-  primary: '#2962ff',
-  secondary: '#4caf50',
-  accent: '#ffca28',
-  card: '#ffffff',
-  highlight: '#bbdefb',
-  error: '#f44336',
-  border: '#e0e0e0',
+export const lightColors = {
+  background: '#F5F5F5',
+  backgroundSecondary: '#FFFFFF',
+  text: '#1E1E1E',
+  textSecondary: '#6B6B6B',
+  primary: '#00D9FF',
+  secondary: '#E89BA7',
+  accent: '#FFB800',
+  card: '#FFFFFF',
+  cardDark: '#F0F0F0',
+  border: '#E0E0E0',
+  error: '#FF5252',
+  success: '#4CAF50',
 };
+
+export const darkColors = {
+  background: '#1E1E1E',
+  backgroundSecondary: '#2A2A2A',
+  text: '#FFFFFF',
+  textSecondary: '#A0A0A0',
+  primary: '#00D9FF',
+  secondary: '#E89BA7',
+  accent: '#FFB800',
+  card: '#2A2A2A',
+  cardDark: '#353535',
+  border: '#3A3A3A',
+  error: '#FF5252',
+  success: '#4CAF50',
+};
+
+// Default to dark colors for now
+export const colors = darkColors;
+
+export const getColors = (isDark: boolean) => isDark ? darkColors : lightColors;
 
 export const buttonStyles = StyleSheet.create({
   primaryButton: {
@@ -77,11 +99,11 @@ export const commonStyles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginVertical: 8,
     width: '100%',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
     elevation: 3,
   },
   icon: {

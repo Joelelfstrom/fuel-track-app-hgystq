@@ -8,40 +8,40 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  useColorScheme,
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { colors } from '@/styles/commonStyles';
-import { getSettings, saveSettings } from '@/utils/storage';
-import { AppSettings } from '@/types/fuel';
-import { getTranslation } from '@/utils/translations';
 import { IconSymbol } from '@/components/IconSymbol';
+import { getColors } from '@/styles/commonStyles';
+import { AppSettings } from '@/types/fuel';
+import { getSettings, saveSettings } from '@/utils/storage';
+import { getTranslation } from '@/utils/translations';
 
 const LANGUAGES = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { label: 'English', value: 'en' },
+  { label: 'Español', value: 'es' },
+  { label: 'Français', value: 'fr' },
+  { label: 'Deutsch', value: 'de' },
 ];
 
 const CURRENCIES = [
-  { code: 'USD', name: 'US Dollar', symbol: '$' },
-  { code: 'EUR', name: 'Euro', symbol: '€' },
-  { code: 'GBP', name: 'British Pound', symbol: '£' },
-  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
-  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
-  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
-  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
-  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
-  { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
-  { code: 'MXN', name: 'Mexican Peso', symbol: 'MX$' },
+  { label: 'USD ($)', value: 'USD' },
+  { label: 'EUR (€)', value: 'EUR' },
+  { label: 'GBP (£)', value: 'GBP' },
+  { label: 'JPY (¥)', value: 'JPY' },
+  { label: 'CAD ($)', value: 'CAD' },
+  { label: 'AUD ($)', value: 'AUD' },
 ];
 
 const UNITS = [
-  { code: 'liters', name: 'Liters', symbol: 'L' },
-  { code: 'gallons', name: 'Gallons', symbol: 'gal' },
+  { label: 'Liters', value: 'liters' },
+  { label: 'Gallons', value: 'gallons' },
 ];
 
 export default function SettingsScreen() {
+  const colorScheme = useColorScheme();
+  const colors = getColors(colorScheme === 'dark');
+  
   const [settings, setSettings] = useState<AppSettings>({
     language: 'en',
     currency: 'USD',
@@ -89,109 +89,69 @@ export default function SettingsScreen() {
         <View style={styles.content}>
           <View style={styles.header}>
             <IconSymbol name="gearshape.fill" size={48} color={colors.primary} />
-            <Text style={styles.headerTitle}>{t('settings')}</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>{t('settings')}</Text>
           </View>
 
+          {/* Language Section */}
           <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <IconSymbol name="globe" size={24} color={colors.primary} />
-              <Text style={styles.sectionTitle}>{t('language')}</Text>
-            </View>
-            <View style={styles.optionsContainer}>
-              {LANGUAGES.map((lang) => (
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('language')}</Text>
+            <View style={[styles.card, { backgroundColor: colors.card }]}>
+              {LANGUAGES.map((lang, index) => (
                 <TouchableOpacity
-                  key={lang.code}
+                  key={lang.value}
                   style={[
-                    styles.optionButton,
-                    settings.language === lang.code && styles.optionButtonActive,
+                    styles.option,
+                    index !== LANGUAGES.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.border },
                   ]}
-                  onPress={() => handleLanguageChange(lang.code as any)}
+                  onPress={() => handleLanguageChange(lang.value as any)}
                 >
-                  <Text style={styles.optionFlag}>{lang.flag}</Text>
-                  <Text
-                    style={[
-                      styles.optionText,
-                      settings.language === lang.code && styles.optionTextActive,
-                    ]}
-                  >
-                    {lang.name}
-                  </Text>
-                  {settings.language === lang.code && (
-                    <IconSymbol name="checkmark.circle.fill" size={20} color={colors.card} />
+                  <Text style={[styles.optionText, { color: colors.text }]}>{lang.label}</Text>
+                  {settings.language === lang.value && (
+                    <IconSymbol name="checkmark.circle.fill" size={24} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
+          {/* Currency Section */}
           <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <IconSymbol name="dollarsign.circle.fill" size={24} color={colors.primary} />
-              <Text style={styles.sectionTitle}>{t('currency')}</Text>
-            </View>
-            <View style={styles.optionsContainer}>
-              {CURRENCIES.map((curr) => (
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('currency')}</Text>
+            <View style={[styles.card, { backgroundColor: colors.card }]}>
+              {CURRENCIES.map((curr, index) => (
                 <TouchableOpacity
-                  key={curr.code}
+                  key={curr.value}
                   style={[
-                    styles.optionButton,
-                    settings.currency === curr.code && styles.optionButtonActive,
+                    styles.option,
+                    index !== CURRENCIES.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.border },
                   ]}
-                  onPress={() => handleCurrencyChange(curr.code)}
+                  onPress={() => handleCurrencyChange(curr.value)}
                 >
-                  <Text style={styles.optionSymbol}>{curr.symbol}</Text>
-                  <View style={styles.optionContent}>
-                    <Text
-                      style={[
-                        styles.optionText,
-                        settings.currency === curr.code && styles.optionTextActive,
-                      ]}
-                    >
-                      {curr.name}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.optionSubtext,
-                        settings.currency === curr.code && styles.optionSubtextActive,
-                      ]}
-                    >
-                      {curr.code}
-                    </Text>
-                  </View>
-                  {settings.currency === curr.code && (
-                    <IconSymbol name="checkmark.circle.fill" size={20} color={colors.card} />
+                  <Text style={[styles.optionText, { color: colors.text }]}>{curr.label}</Text>
+                  {settings.currency === curr.value && (
+                    <IconSymbol name="checkmark.circle.fill" size={24} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
+          {/* Unit Section */}
           <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <IconSymbol name="fuelpump.fill" size={24} color={colors.primary} />
-              <Text style={styles.sectionTitle}>{t('unit')}</Text>
-            </View>
-            <View style={styles.optionsContainer}>
-              {UNITS.map((unit) => (
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('unit')}</Text>
+            <View style={[styles.card, { backgroundColor: colors.card }]}>
+              {UNITS.map((unit, index) => (
                 <TouchableOpacity
-                  key={unit.code}
+                  key={unit.value}
                   style={[
-                    styles.optionButton,
-                    settings.unit === unit.code && styles.optionButtonActive,
+                    styles.option,
+                    index !== UNITS.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.border },
                   ]}
-                  onPress={() => handleUnitChange(unit.code as any)}
+                  onPress={() => handleUnitChange(unit.value as any)}
                 >
-                  <Text style={styles.optionSymbol}>{unit.symbol}</Text>
-                  <Text
-                    style={[
-                      styles.optionText,
-                      settings.unit === unit.code && styles.optionTextActive,
-                    ]}
-                  >
-                    {unit.name}
-                  </Text>
-                  {settings.unit === unit.code && (
-                    <IconSymbol name="checkmark.circle.fill" size={20} color={colors.card} />
+                  <Text style={[styles.optionText, { color: colors.text }]}>{unit.label}</Text>
+                  {settings.unit === unit.value && (
+                    <IconSymbol name="checkmark.circle.fill" size={24} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -209,6 +169,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+    paddingTop: Platform.OS === 'ios' ? 60 : 16,
     paddingBottom: 100,
   },
   header: {
@@ -219,70 +180,31 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.text,
     marginTop: 12,
   },
   section: {
-    marginBottom: 32,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 24,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
-    marginLeft: 12,
+    marginBottom: 12,
+    paddingHorizontal: 4,
   },
-  optionsContainer: {
-    gap: 8,
-  },
-  optionButton: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: colors.border,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+  card: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.3)',
     elevation: 3,
   },
-  optionButtonActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  optionFlag: {
-    fontSize: 24,
-    marginRight: 12,
-  },
-  optionSymbol: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.primary,
-    marginRight: 12,
-    width: 30,
-  },
-  optionContent: {
-    flex: 1,
+  option: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
   },
   optionText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  optionTextActive: {
-    color: colors.card,
-  },
-  optionSubtext: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-  optionSubtextActive: {
-    color: colors.card,
-    opacity: 0.8,
+    fontWeight: '500',
   },
 });

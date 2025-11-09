@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Platform,
   Dimensions,
+  useColorScheme,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import React from 'react';
@@ -19,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useRouter, usePathname } from 'expo-router';
 import { IconSymbol } from '@/components/IconSymbol';
-import { colors } from '@/styles/commonStyles';
+import { getColors } from '@/styles/commonStyles';
 
 export interface TabBarItem {
   name: string;
@@ -44,6 +45,8 @@ export default function FloatingTabBar({
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
+  const colorScheme = useColorScheme();
+  const colors = getColors(colorScheme === 'dark');
 
   const activeIndex = tabs.findIndex((tab) => pathname.includes(tab.name));
   const indicatorPosition = useSharedValue(activeIndex >= 0 ? activeIndex : 0);
@@ -85,7 +88,7 @@ export default function FloatingTabBar({
     >
       <BlurView
         intensity={Platform.OS === 'ios' ? 80 : 100}
-        tint={theme.dark ? 'dark' : 'light'}
+        tint={colorScheme === 'dark' ? 'dark' : 'light'}
         style={[
           styles.container,
           {
@@ -93,8 +96,8 @@ export default function FloatingTabBar({
             borderRadius,
             backgroundColor: Platform.OS === 'ios' 
               ? 'transparent' 
-              : theme.dark 
-                ? 'rgba(33, 33, 33, 0.95)' 
+              : colorScheme === 'dark'
+                ? 'rgba(42, 42, 42, 0.95)' 
                 : 'rgba(255, 255, 255, 0.95)',
           },
         ]}
@@ -123,13 +126,13 @@ export default function FloatingTabBar({
                 <IconSymbol
                   name={tab.icon as any}
                   size={24}
-                  color={isActive ? colors.card : colors.text}
+                  color={isActive ? '#FFFFFF' : colors.text}
                 />
                 <Text
                   style={[
                     styles.label,
                     {
-                      color: isActive ? colors.card : colors.text,
+                      color: isActive ? '#FFFFFF' : colors.text,
                     },
                   ]}
                 >
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'hidden',
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
     elevation: 8,
   },
   tabsContainer: {
