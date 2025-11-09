@@ -10,6 +10,12 @@ export default function TabLayout() {
   // Define the tabs configuration
   const tabs: TabBarItem[] = [
     {
+      name: '(home)',
+      route: '/(tabs)/(home)',
+      icon: 'house.fill',
+      label: 'Home',
+    },
+    {
       name: 'fuelEntry',
       route: '/(tabs)/fuelEntry',
       icon: 'fuelpump.fill',
@@ -33,6 +39,10 @@ export default function TabLayout() {
   if (Platform.OS === 'ios') {
     return (
       <NativeTabs>
+        <NativeTabs.Trigger name="(home)">
+          <Icon sf="house.fill" drawable="ic_home" />
+          <Label>Home</Label>
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="fuelEntry">
           <Icon sf="fuelpump.fill" drawable="ic_fuel" />
           <Label>Add Fuel</Label>
@@ -58,6 +68,7 @@ export default function TabLayout() {
           animation: 'none',
         }}
       >
+        <Stack.Screen name="(home)" />
         <Stack.Screen name="fuelEntry" />
         <Stack.Screen name="statistics" />
         <Stack.Screen name="settings" />
