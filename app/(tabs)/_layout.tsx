@@ -12,19 +12,19 @@ export default function TabLayout() {
     {
       name: '(home)',
       route: '/(tabs)/(home)',
-      icon: 'house.fill',
+      icon: 'fuelpump.fill',
       label: 'Home',
     },
     {
       name: 'fuelEntry',
       route: '/(tabs)/fuelEntry',
-      icon: 'fuelpump.fill',
+      icon: 'plus.circle.fill',
       label: 'Add Fuel',
     },
     {
       name: 'statistics',
       route: '/(tabs)/statistics',
-      icon: 'chart.bar.fill',
+      icon: 'chart.pie.fill',
       label: 'Statistics',
     },
   ];
@@ -34,15 +34,15 @@ export default function TabLayout() {
     return (
       <NativeTabs>
         <NativeTabs.Trigger name="(home)">
-          <Icon sf="house.fill" drawable="ic_home" />
+          <Icon sf="fuelpump.fill" drawable="ic_fuel" />
           <Label>Home</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="fuelEntry">
-          <Icon sf="fuelpump.fill" drawable="ic_fuel" />
+          <Icon sf="plus.circle.fill" drawable="ic_add" />
           <Label>Add Fuel</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="statistics">
-          <Icon sf="chart.bar.fill" drawable="ic_stats" />
+          <Icon sf="chart.pie.fill" drawable="ic_stats" />
           <Label>Statistics</Label>
         </NativeTabs.Trigger>
       </NativeTabs>
