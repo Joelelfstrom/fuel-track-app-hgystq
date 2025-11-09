@@ -19,13 +19,13 @@ export default function TabLayout() {
       name: 'fuelEntry',
       route: '/(tabs)/fuelEntry',
       icon: 'plus.circle.fill',
-      label: 'Add Fuel',
+      label: '➕',
     },
     {
       name: 'statistics',
       route: '/(tabs)/statistics',
-      icon: 'chart.pie.fill',
-      label: 'Statistics',
+      icon: 'chart.bar.fill',
+      label: '📊',
     },
   ];
 
@@ -39,11 +39,11 @@ export default function TabLayout() {
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="fuelEntry">
           <Icon sf="plus.circle.fill" drawable="ic_add" />
-          <Label>Add Fuel</Label>
+          <Label>➕</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="statistics">
-          <Icon sf="chart.pie.fill" drawable="ic_stats" />
-          <Label>Statistics</Label>
+          <Icon sf="chart.bar.fill" drawable="ic_stats" />
+          <Label>📊</Label>
         </NativeTabs.Trigger>
       </NativeTabs>
     );
