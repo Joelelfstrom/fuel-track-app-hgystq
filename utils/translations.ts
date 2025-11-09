@@ -6,6 +6,17 @@ export const translations = {
     statistics: 'Statistics',
     settings: 'Settings',
     
+    // Home Screen
+    spentOnFuelThisMonth: 'Spent on fuel this month',
+    totalLiters: 'Total Liters',
+    totalGallons: 'Total Gallons',
+    avgPerFill: 'Avg per Fill',
+    totalEntries: 'Total Entries',
+    recentEntries: 'Recent Entries',
+    viewAll: 'View All',
+    noEntriesYet: 'No entries yet. Add your first fuel entry!',
+    fuelPurchase: 'Fuel Purchase',
+    
     // Fuel Entry Screen
     addFuelEntry: 'Add Fuel Entry',
     date: 'Date',
@@ -45,6 +56,17 @@ export const translations = {
     fuelEntry: 'Añadir Combustible',
     statistics: 'Estadísticas',
     settings: 'Configuración',
+    
+    // Home Screen
+    spentOnFuelThisMonth: 'Gastado en combustible este mes',
+    totalLiters: 'Total Litros',
+    totalGallons: 'Total Galones',
+    avgPerFill: 'Promedio por Llenado',
+    totalEntries: 'Total de Entradas',
+    recentEntries: 'Entradas Recientes',
+    viewAll: 'Ver Todo',
+    noEntriesYet: '¡No hay entradas aún. Añade tu primera entrada de combustible!',
+    fuelPurchase: 'Compra de Combustible',
     
     // Fuel Entry Screen
     addFuelEntry: 'Añadir Entrada de Combustible',
@@ -86,6 +108,17 @@ export const translations = {
     statistics: 'Statistiques',
     settings: 'Paramètres',
     
+    // Home Screen
+    spentOnFuelThisMonth: 'Dépensé en carburant ce mois-ci',
+    totalLiters: 'Total Litres',
+    totalGallons: 'Total Gallons',
+    avgPerFill: 'Moyenne par Plein',
+    totalEntries: 'Total des Entrées',
+    recentEntries: 'Entrées Récentes',
+    viewAll: 'Voir Tout',
+    noEntriesYet: 'Aucune entrée pour le moment. Ajoutez votre première entrée de carburant!',
+    fuelPurchase: 'Achat de Carburant',
+    
     // Fuel Entry Screen
     addFuelEntry: 'Ajouter une Entrée de Carburant',
     date: 'Date',
@@ -126,6 +159,17 @@ export const translations = {
     statistics: 'Statistiken',
     settings: 'Einstellungen',
     
+    // Home Screen
+    spentOnFuelThisMonth: 'Für Kraftstoff ausgegeben in diesem Monat',
+    totalLiters: 'Gesamt Liter',
+    totalGallons: 'Gesamt Gallonen',
+    avgPerFill: 'Durchschnitt pro Tankfüllung',
+    totalEntries: 'Gesamteinträge',
+    recentEntries: 'Letzte Einträge',
+    viewAll: 'Alle Anzeigen',
+    noEntriesYet: 'Noch keine Einträge. Fügen Sie Ihren ersten Kraftstoffeintrag hinzu!',
+    fuelPurchase: 'Kraftstoffkauf',
+    
     // Fuel Entry Screen
     addFuelEntry: 'Kraftstoffeintrag Hinzufügen',
     date: 'Datum',
@@ -165,6 +209,17 @@ export const translations = {
     fuelEntry: 'Lägg till Bränsle',
     statistics: 'Statistik',
     settings: 'Inställningar',
+    
+    // Home Screen
+    spentOnFuelThisMonth: 'Spenderat på bränsle denna månad',
+    totalLiters: 'Totalt Liter',
+    totalGallons: 'Totalt Gallons',
+    avgPerFill: 'Genomsnitt per Påfyllning',
+    totalEntries: 'Totalt Antal Inmatningar',
+    recentEntries: 'Senaste Inmatningar',
+    viewAll: 'Visa Alla',
+    noEntriesYet: 'Inga inmatningar ännu. Lägg till din första bränsleinmatning!',
+    fuelPurchase: 'Bränsleköp',
     
     // Fuel Entry Screen
     addFuelEntry: 'Lägg till Bränsleinmatning',

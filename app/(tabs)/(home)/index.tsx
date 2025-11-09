@@ -115,7 +115,7 @@ export default function HomeScreen() {
               {formatCurrency(currentMonthStats.totalCost, settings.currency).replace(/\.\d{2}$/, '')}
             </Text>
             <Text style={[styles.mainAmountLabel, { color: themeColors.text }]}>
-              Spent on fuel this month
+              {t('spentOnFuelThisMonth')}
             </Text>
           </View>
 
@@ -123,15 +123,15 @@ export default function HomeScreen() {
           <View style={styles.statsGrid}>
             <View style={styles.statBox}>
               <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>
-                Total Liters
+                {settings.unit === 'liters' ? t('totalLiters') : t('totalGallons')}
               </Text>
               <Text style={[styles.statValue, { color: themeColors.text }]}>
-                {currentMonthStats.totalAmount.toFixed(1)}L
+                {currentMonthStats.totalAmount.toFixed(1)}{settings.unit === 'liters' ? 'L' : 'gal'}
               </Text>
             </View>
             <View style={styles.statBox}>
               <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>
-                Avg per Fill
+                {t('avgPerFill')}
               </Text>
               <Text style={[styles.statValue, { color: themeColors.text }]}>
                 {formatCurrency(currentMonthStats.avgPerFill, settings.currency).replace(/\.\d{2}$/, '')}
@@ -139,7 +139,7 @@ export default function HomeScreen() {
             </View>
             <View style={styles.statBox}>
               <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>
-                Total Entries
+                {t('totalEntries')}
               </Text>
               <Text style={[styles.statValue, { color: themeColors.text }]}>
                 {currentMonthStats.entryCount}
@@ -152,11 +152,11 @@ export default function HomeScreen() {
         <View style={styles.recentSection}>
           <View style={styles.recentHeader}>
             <Text style={[styles.recentTitle, { color: themeColors.text }]}>
-              Recent Entries
+              {t('recentEntries')}
             </Text>
             <TouchableOpacity onPress={() => router.push('/(tabs)/statistics')}>
               <Text style={[styles.viewAllText, { color: themeColors.secondary }]}>
-                View All →
+                {t('viewAll')} →
               </Text>
             </TouchableOpacity>
           </View>
@@ -170,7 +170,7 @@ export default function HomeScreen() {
               <View style={styles.emptyState}>
                 <IconSymbol name="fuelpump" size={48} color={themeColors.textSecondary} />
                 <Text style={[styles.emptyText, { color: themeColors.textSecondary }]}>
-                  No entries yet. Add your first fuel entry!
+                  {t('noEntriesYet')}
                 </Text>
               </View>
             ) : (
@@ -184,12 +184,12 @@ export default function HomeScreen() {
                   </View>
                   <View style={styles.entryContent}>
                     <Text style={[styles.entryTitle, { color: themeColors.text }]}>
-                      {entry.notes || 'Fuel Purchase'}
+                      {entry.notes || t('fuelPurchase')}
                     </Text>
                     <View style={styles.entryDetails}>
                       <IconSymbol name="drop.fill" size={12} color={themeColors.textSecondary} />
                       <Text style={[styles.entryAmount, { color: themeColors.textSecondary }]}>
-                        {entry.amount.toFixed(1)}L
+                        {entry.amount.toFixed(1)}{settings.unit === 'liters' ? 'L' : 'gal'}
                       </Text>
                       {entry.odometer && (
                         <>
