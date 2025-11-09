@@ -161,12 +161,20 @@ export default function HomeScreen() {
               </Text>
               <IconSymbol name="calendar" size={20} color={themeColors.text} />
             </View>
-            <TouchableOpacity
-              style={[styles.settingsButton, { backgroundColor: themeColors.card }]}
-              onPress={() => router.push('/(tabs)/settings')}
-            >
-              <IconSymbol name="gearshape.fill" size={24} color={themeColors.text} />
-            </TouchableOpacity>
+            <View style={styles.headerButtons}>
+              <TouchableOpacity
+                style={[styles.headerButton, { backgroundColor: themeColors.card }]}
+                onPress={() => router.push('/(tabs)/fuelEntry')}
+              >
+                <IconSymbol name="plus" size={24} color={themeColors.text} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.headerButton, { backgroundColor: themeColors.card }]}
+                onPress={() => router.push('/(tabs)/settings')}
+              >
+                <IconSymbol name="gearshape.fill" size={24} color={themeColors.text} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Main Amount Display */}
@@ -315,6 +323,18 @@ const styles = StyleSheet.create({
   monthText: {
     fontSize: 18,
     fontWeight: '600',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  headerButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   settingsButton: {
     width: 44,
