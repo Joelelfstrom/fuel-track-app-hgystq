@@ -22,6 +22,7 @@ const LANGUAGES = [
   { label: 'Español', value: 'es' },
   { label: 'Français', value: 'fr' },
   { label: 'Deutsch', value: 'de' },
+  { label: 'Svenska', value: 'sv' },
 ];
 
 const CURRENCIES = [
@@ -31,6 +32,7 @@ const CURRENCIES = [
   { label: 'JPY (¥)', value: 'JPY' },
   { label: 'CAD ($)', value: 'CAD' },
   { label: 'AUD ($)', value: 'AUD' },
+  { label: 'SEK (kr)', value: 'SEK' },
 ];
 
 const UNITS = [
@@ -59,7 +61,7 @@ export default function SettingsScreen() {
 
   const t = (key: string) => getTranslation(settings.language, key);
 
-  const handleLanguageChange = async (language: 'en' | 'es' | 'fr' | 'de') => {
+  const handleLanguageChange = async (language: 'en' | 'es' | 'fr' | 'de' | 'sv') => {
     const newSettings = { ...settings, language };
     setSettings(newSettings);
     await saveSettings(newSettings);

@@ -160,8 +160,48 @@ export const translations = {
     fillAllFields: 'Bitte füllen Sie alle erforderlichen Felder aus',
     invalidAmount: 'Bitte geben Sie gültige Beträge ein',
   },
+  sv: {
+    // Tabs
+    fuelEntry: 'Lägg till Bränsle',
+    statistics: 'Statistik',
+    settings: 'Inställningar',
+    
+    // Fuel Entry Screen
+    addFuelEntry: 'Lägg till Bränsleinmatning',
+    date: 'Datum',
+    cost: 'Kostnad',
+    amount: 'Mängd',
+    odometer: 'Vägmätare (valfritt)',
+    notes: 'Anteckningar (valfritt)',
+    save: 'Spara Inmatning',
+    cancel: 'Avbryt',
+    
+    // Statistics Screen
+    monthlyStats: 'Månadsstatistik',
+    yearlyStats: 'Årsstatistik',
+    totalCost: 'Total Kostnad',
+    totalAmount: 'Total Mängd',
+    averagePrice: 'Genomsnittspris',
+    entries: 'Inmatningar',
+    noData: 'Inga bränsleinmatningar ännu',
+    addFirstEntry: 'Lägg till din första bränsleinmatning för att se statistik',
+    
+    // Settings Screen
+    language: 'Språk',
+    currency: 'Valuta',
+    unit: 'Enhet',
+    liters: 'Liter',
+    gallons: 'Gallons',
+    
+    // Messages
+    entrySaved: 'Bränsleinmatning sparad',
+    entryDeleted: 'Bränsleinmatning raderad',
+    error: 'Ett fel uppstod',
+    fillAllFields: 'Vänligen fyll i alla obligatoriska fält',
+    invalidAmount: 'Vänligen ange giltiga belopp',
+  },
 };
 
-export const getTranslation = (language: 'en' | 'es' | 'fr' | 'de', key: string): string => {
+export const getTranslation = (language: 'en' | 'es' | 'fr' | 'de' | 'sv', key: string): string => {
   return translations[language][key as keyof typeof translations.en] || key;
 };

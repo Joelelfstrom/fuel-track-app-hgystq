@@ -10,7 +10,7 @@ export interface FuelEntry {
 }
 
 export interface AppSettings {
-  language: 'en' | 'es' | 'fr' | 'de';
+  language: 'en' | 'es' | 'fr' | 'de' | 'sv';
   currency: string;
   unit: 'liters' | 'gallons';
 }

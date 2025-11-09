@@ -12,12 +12,6 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import React from 'react';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  interpolate,
-} from 'react-native-reanimated';
 import { useRouter, usePathname } from 'expo-router';
 import { IconSymbol } from '@/components/IconSymbol';
 import { getColors } from '@/styles/commonStyles';
@@ -48,38 +42,11 @@ export default function FloatingTabBar({
   const colorScheme = useColorScheme();
   const colors = getColors(colorScheme === 'dark');
 
-  const activeIndex = tabs.findIndex((tab) => pathname.includes(tab.name));
-  const indicatorPosition = useSharedValue(activeIndex >= 0 ? activeIndex : 0);
-
-  React.useEffect(() => {
-    const newIndex = tabs.findIndex((tab) => pathname.includes(tab.name));
-    if (newIndex >= 0) {
-      indicatorPosition.value = withSpring(newIndex, {
-        damping: 20,
-        stiffness: 90,
-      });
-    }
-  }, [pathname, tabs]);
-
   const handleTabPress = (route: string) => {
     router.push(route as any);
   };
 
   const tabWidth = containerWidth / tabs.length;
-
-  const indicatorStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            indicatorPosition.value,
-            [0, tabs.length - 1],
-            [0, tabWidth * (tabs.length - 1)]
-          ),
-        },
-      ],
-    };
-  });
 
   return (
     <SafeAreaView
@@ -102,17 +69,6 @@ export default function FloatingTabBar({
           },
         ]}
       >
-        <Animated.View
-          style={[
-            styles.indicator,
-            {
-              width: tabWidth,
-              borderRadius: borderRadius - 4,
-              backgroundColor: colors.primary,
-            },
-            indicatorStyle,
-          ]}
-        />
         <View style={styles.tabsContainer}>
           {tabs.map((tab, index) => {
             const isActive = pathname.includes(tab.name);
@@ -126,13 +82,13 @@ export default function FloatingTabBar({
                 <IconSymbol
                   name={tab.icon as any}
                   size={24}
-                  color={isActive ? '#FFFFFF' : colors.text}
+                  color={isActive ? colors.primary : colors.text}
                 />
                 <Text
                   style={[
                     styles.label,
                     {
-                      color: isActive ? '#FFFFFF' : colors.text,
+                      color: isActive ? colors.primary : colors.text,
                     },
                   ]}
                 >
@@ -177,12 +133,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     marginTop: 4,
-  },
-  indicator: {
-    position: 'absolute',
-    height: '80%',
-    top: '10%',
-    left: 0,
-    zIndex: 1,
   },
 });
